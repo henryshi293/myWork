@@ -1,0 +1,26 @@
+h1 {
+  color: darkblue;
+  font-family:fantasy;
+  text-align: center;
+}
+body {
+  background-color: grey;
+  font-size: 1.5em;
+  margin:0px
+}
+ul {
+  margin:15px;
+}
+#imgProperty {
+  width:300px;
+  border:20px solid black;
+}
+.navbar {
+  background-color: black;
+  color:white;
+  padding:30px;
+}
+#mylink {
+  float:right;
+  color:white;
+}

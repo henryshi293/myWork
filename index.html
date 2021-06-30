@@ -3,27 +3,33 @@
   <head>
     <title>Homepage</title>
     <link rel="icon" href="favicon.png" type="image/x-icon"/>
+    <!-- Internal CSS uses style tag -->
+    <link rel='stylesheet' href='style.css'>
   </head>
 
   <body>
+    <div class="navbar">
+      <span>Home</span>
+      <span><a id="mylink" href='about.html'>About</a></span>
+    </div>
+
     <h1>Home</h1>
-    <p>Welcome to my <a href="http://www.cnn.com">home</a> page!</p>
+    <p>Welcome to my home page!</p>
     <h3>Favourite movies:</h3>
-    <ul>
+
+    <ul><strong>
       <li>Interstellar</li>
-      <img src="interstellar.jpg">
+      <!-- Inline CSS uses style attribute for HTML tag-->
+      <img id='imgProperty' src="interstellar.jpg">
       <li>Avengers:Endgame</li>
-      <img src="endgame.jpg">
+      <img id='imgProperty'src="endgame.jpg">
       <li>The Pursuit of Happyness</li>
-      <img src="The Pursuit of Happyness.jpg">
+      <img id='imgProperty'src="The Pursuit of Happyness.jpg">
       <li>Tenet</li>
-      <img src="tenet.jpg">
+      <img id='imgProperty'src="tenet.jpg">
       <li>Fast & Furious 5</li>
-      <img src="F5.jpg">
-    </ul>
-
-
-
+      <img id='imgProperty'src="F5.jpg">
+    </ul></strong>
   </body>
 
   <script>
