@@ -1,95 +1,163 @@
 <html>
-
   <head>
-        <!-- Compiled and minified CSS -->
-     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <title >Dashboard</title>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src = 'https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js'></script>
+    <!-- Leaflet.js GIS links -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 
-     <!-- Compiled and minified JavaScript -->
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-     <script src="https://unpkg.com/axios@0.21.1/dist/axios.min.js"></script>
+    <style>
+      .size {
+        height:950px;
+      }
+    </style>
+
+
   </head>
 
   <body>
     <nav>
-      <div class="nav-wrapper #ff5252 red accent-2">
-        <a href="#" class="brand-logo center black-text">Dashboard</a>
+      <div class="nav-wrapper #1a237e indigo darken-4">
+        <a href="#" class="brand-logo center white-text" style="padding-left:30px;"><b>Dashboard</b></a>
       </div>
     </nav>
 
     <div class="row">
-      <div class="col s12 m6">
-        <div class="card #448aff blue accent-2">
-          <div class="card-content black-text">
-            <span class="card-title" id="geo">title</span>
-            <div id="weather">
-              <div class="progress">
-                <div class="indeterminate"></div>
+      <div class="col s12 m3" >
+        <div class="z-depth-5">
+          <div class="card red">
+            <div class="size">
+              <div class="card-content">
+                <span class="card-title" style="color:white"><b>Top 10 COVID Confirmed</b></span>
+                <div id="output"></div>
               </div>
             </div>
           </div>
         </div>
-      </div> <!-- End of first card -->
-
+      </div> <!-- end of first card -->
       <div class="col s12 m6">
-        <div class="card blue">
-          <div class="card-content black-text">
-            <span class="card-title">List</span>
-            <p>I am a very simple card. I am good at containing small bits of information.
-            I am convenient because I require little markup to use effectively.</p>
+        <div class="z-depth-5">
+          <div class="card grey white-text">
+            <div class="size">
+              <div class="card-content">
+                <span class="card-title"><b>Map</b></span>
+                <div style="float:left">
+                  <ul>
+                    <div style='color:red'><h6>Top 10 Confirmed</h6></div>
+                    <div style='color:orange'><h6>11-100</h6></div>
+                    <div style='color:yellow'><h6>101-200</h6></div>
+                    <div style='color:green'><h6>After 200</h6></div>
+                  </ul>
+                </div>
+                <br>
+                <div id="map" style="width:100%;height:77%"></div>
+              </div>
+            </div>
+          </div>
+        </div> <!-- end of second card -->
+      </div>
+    </div> <!-- end of 1st row -->
+
+    <div class="row">
+      <div class="col s12 m6">
+        <div class="z-depth-5">
+          <div class="card #ffd740 amber accent-2 white-text">
+            <div class="card-content">
+              <span class="card-title">Card Title</span>
+              <p>I am a very simple card. I am good at containing small bits of information.
+              I am convenient because I require little markup to use effectively.</p>
+            </div>
           </div>
         </div>
-      </div> <!-- End of second card -->
-    </div> <!-- End of first row -->
-
-
-
-  <div class="row">
-    <div class="col s12 m6">
-      <div class="card #b2ebf2 cyan lighten-4">
-        <div class="card-content black-text">
-          <span class="card-title">List</span>
-          <p>I am a very simple card. I am good at containing small bits of information.
-          I am convenient because I require little markup to use effectively.</p>
+      </div> <!-- end of first card -->
+      <div class="col s12 m6">
+        <div class="z-depth-5">
+          <div class="card #ffca28 amber lighten-1 white-text">
+            <div class="card-content">
+              <span class="card-title">Card Title</span>
+              <p>I am a very simple card. I am good at containing small bits of information.
+              I am convenient because I require little markup to use effectively.</p>
+            </div>
+          </div>
         </div>
-      </div>
-    </div> <!-- End of first card -->
-
-    <div class="col s12 m6">
-      <div class="card #e0f7fa cyan lighten-5">
-        <div class="card-content black-text">
-          <span class="card-title">List</span>
-          <p>I am a very simple card. I am good at containing small bits of information.
-          I am convenient because I require little markup to use effectively.</p>
-        </div>
-      </div>
-    </div> <!-- End of second card -->
-  </div> <!-- End of second row -->
+      </div> <!-- end of second card -->
+    </div> <!-- end of 2nd row -->
+  </body>
 
   <script>
-  axios.get('https://ipapi.co/json/')
-   .then(response => {
-     var lat = response.data.latitude;
-     var lon = response.data.longitude;
-     geoData(response.data);
-     var wstring = 'https://www.7timer.info/bin/civillight.php?lon=' + lon + '&lat=' + lat + '&unit=metric&output=json';
-     weatherData(wstring);
-   })
 
- function geoData(response) {
-   var gHandle = document.getElementById('geo');
-   gHandle.innerHTML = response.city;
- }
+    axios.get('https://www.trackcorona.live/api/countries')
+      .then(response => {
+        console.log(response.data.data);
+        buildList(response.data.data);  //Call the buildList function
+        mapAlgo(response.data.data);
+      })
 
- function weatherData(wstring) {
-   axios.get(wstring)
-     .then(response => {
-       var gHandle = document.getElementById('weather');
-       var myHTML = "Todays weather is " + response.data.dataseries[0].weather;
-       gHandle.innerHTML = myHTML;
-     })
- }
 
+
+
+       //Called mapIt()function
+
+      function mapAlgo(response) {
+        var map = L.map('map').setView([25, 5], 2);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        for (i=0;i<response.length;i++) {
+          var lat = response[i].latitude;
+          lon = response[i].longitude
+          var radius = parseInt(response[i].dead) * 2;
+          var popup = "<h6>" + response[i].location + "</h6><br>"+"Confirmed:"+"<p>" + response[i].confirmed + "</p>";
+          if (i<10) {
+            var c = 'red';
+          }else if (i>=10&&i<100) {
+            var c ='orange';
+          }else if (i>=100&&i<200){
+            var c ='yellow';
+          }else {
+            var c = 'green';
+          }
+
+          L.circle([lat,lon],{color:c,radius}).addTo(map).bindPopup(popup);
+        }
+      }
+
+      function mapIt() {
+        var map = L.map('map').setView([39.9042, 116.4074], 5);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        L.marker([39.9042, 116.4074]).addTo(map)
+            .bindPopup(" <img src='beijing.jpg' style='width:100px;length:100px'> <br>Beijing,China")
+            .openPopup();
+      }
+
+      function buildList(data) {
+        var dHandle = document.getElementById("output");
+        var myHTML = "<ul class='collection'>";
+
+        data.sort(function(a,b) {
+          return b.confirmed - a.confirmed;
+        });
+
+        for (i=0;i<10;i++) {
+          myHTML = myHTML + "<li class='collection-item #bbdefb blue lighten-4'>"+
+          "<span class='title'>" + "<b>"+data[i].location+
+          "</b>"+"</span>"+ "<p>" +"Confirmed" + "<span class='badge' style='color:green'>"
+          +data[i].confirmed+"</span>"+"<br>"+ "Deaths"+"<span class='badge' style='color:red'>"+
+          data[i].dead+"</span>"+"</p>" +"</li>";
+        }
+        myHTML = myHTML + "</ul>"
+        dHandle.innerHTML = myHTML;
+      }
   </script>
 
 </html>
