@@ -11,6 +11,8 @@
      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
      <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
      <link rel="stylesheet" href='https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.12/css/weather-icons.min.css'>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
   </head>
 
   <style>
@@ -20,7 +22,10 @@
     }
 
     .size {
-      height:300px;
+      height:550px;
+    }
+    .sizeChart {
+      height:480px;
     }
   </style>
 
@@ -36,10 +41,10 @@
     <div class="row">
       <div class="col s12 m6">
         <div class="card #1565c0 blue darken-3">
-          <div class="card-content black-text">
-            <div class="size">
-            <span class="card-title" id="geo">Title</span>
-              <div id="weather">
+          <div class="size">
+          <div class="card-content white-text">
+            <span class="card-title" id="geo" style="color:white"><b><h4>Title</b></h4></span>
+              <div id="weather" style="size:20px">
                 <div class="progress">
                 <div class="indeterminate"></div>
                 </div>
@@ -51,10 +56,10 @@
 
       <div class="col s12 m6">
         <div class="card blue">
-          <div class="card-content black-text">
             <div class="size">
-            <span class="card-title"><b>Map</b></span>
-            <div id="map" style="width:100%; height:90%"></div>
+              <div class="card-content white-text">
+                <span class="card-title center" style="color:white"><b><h4>Map</h4></b></span>
+                <div id="map" style="width:100%; height:75%"></div>
             </div>
           </div>
         </div>
@@ -66,21 +71,21 @@
   <div class="row">
     <div class="col s12 m6">
       <div class="card #b2ebf2 cyan lighten-4">
+        <div class="sizeChart">
         <div class="card-content black-text">
-          <span class="card-title">List</span>
-          <p>I am a very simple card. I am good at containing small bits of information.
-          I am convenient because I require little markup to use effectively.</p>
+          <canvas id="line-chart" width="100%" height="70%"></canvas>
         </div>
+      </div>
       </div>
     </div> <!-- End of first card -->
 
     <div class="col s12 m6">
       <div class="card #e0f7fa cyan lighten-5">
+        <div class="sizeChart">
         <div class="card-content black-text">
-          <span class="card-title">List</span>
-          <p>I am a very simple card. I am good at containing small bits of information.
-          I am convenient because I require little markup to use effectively.</p>
+          <canvas id="bar-chart" width="800" height="450"></canvas>
         </div>
+      </div>
       </div>
     </div> <!-- End of second card -->
   </div> <!-- End of second row -->
@@ -96,6 +101,8 @@
        var wstring = 'https://www.7timer.info/bin/civillight.php?lon='+lon+'&lat='+lat+'&unit=metric&output=json';
        weatherData(wstring);
        mapIt(lat,lon,city);
+       lineGraph(response.data);
+       barChart(response.data);
      })
 
     function mapIt(lat,lon,city) {
@@ -110,8 +117,6 @@
           .openPopup();
     }
 
-
-
    function geoData(response){
      var gHandle = document.getElementById('geo');
      gHandle.innerHTML = response.city;
@@ -122,12 +127,83 @@
          console.log(response);
          var w = response.data.dataseries[0];
          var gHandle = document.getElementById('weather');
-         var myHTML = "<p>Today's weather is " + w.weather+"</p>";
-         myHTML = myHTML + "<div id='wicon'><i class='wi wi-day-sunny'></i>" + w.temp2m.max + "</div>";
+         var myHTML = "<h4>Today's weather is " + w.weather+"</h4>";
+         myHTML = myHTML + "<h4><div id='wicon'><i class='wi wi-day-rain'></i>" + w.temp2m.max + "</div></h4>";
          gHandle.innerHTML = myHTML;
+         lineGraph(response.data.dataseries);
+         barChart(response.data.dataseries)
        })
    }
 
+   function lineGraph (wdata) {
+
+     var labs = [];
+     var highs = [];
+     var lows = [];
+
+     for (i = 0;i<wdata.length;i++) {
+       labs.push(wdata[i].date);
+       highs.push(wdata[i].temp2m.max);
+       lows.push(wdata[i].temp2m.min);
+     }
+
+     new Chart(document.getElementById("line-chart")), {
+      type: 'line',
+      data: {
+        labels: labs,
+        datasets: [{
+            data:highs,
+            label: "Highs",
+            borderColor: "#3e95cd",
+            fill: false
+          }, {
+            data:lows,
+            label: "Lows",
+            borderColor: "#8e5ea2",
+            fill: false
+          }
+        ]
+      },
+      options: {
+        title: {
+          display: true,
+          text: 'Weather in Future'
+        }
+      }
+   }
+ }
+
+    function barChart (wdata) {
+
+      var labs = [];
+      var winds = [];
+
+      for (i = 0;i<wdata.length;i++) {
+        labs.push(wdata[i].date);
+        winds.push(wdata[i].wind10m_max);
+      }
+
+      new Chart(document.getElementById("bar-chart"), {
+        type: 'bar',
+        data: {
+          labels: labs,
+          datasets: [
+            {
+              label: "Wind Speed",
+              backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
+              data: winds
+            }
+          ]
+        },
+        options: {
+          legend: { display: false },
+          title: {
+            display: true,
+            text: 'Winds Speed in Future'
+          }
+        }
+    });
+  }
   </script>
 
 </html>
